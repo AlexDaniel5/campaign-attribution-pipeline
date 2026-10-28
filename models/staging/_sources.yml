@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Synthetic Salesforce / Marketo shaped CRM data loaded by the Python
+      generator (campaign_attribution.build_warehouse). All data is fake.
+    schema: raw
+    tables:
+      - name: raw_campaigns
+        description: Marketing campaigns.
+      - name: raw_leads
+        description: Inbound/outbound leads with MQL and conversion flags.
+      - name: raw_contacts
+        description: Contacts created when a lead converts.
+      - name: raw_campaign_members
+        description: Campaign membership events (the attribution touches).
+      - name: raw_opportunities
+        description: Sales opportunities tied to a contact.

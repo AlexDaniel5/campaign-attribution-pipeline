@@ -1,0 +1,125 @@
+version: 2
+
+models:
+  - name: stg_campaigns
+    description: Cleaned campaign dimension.
+    columns:
+      - name: campaign_id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: channel
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Email', 'Paid Search', 'Paid Social', 'Webinar',
+                         'Content Syndication', 'Organic Search', 'Events', 'Referral']
+      - name: campaign_type
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Inbound', 'Outbound', 'Nurture', 'Field', 'Partner']
+
+  - name: stg_leads
+    description: Cleaned lead records with funnel flags.
+    columns:
+      - name: lead_id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: lead_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['New', 'Working', 'Nurture', 'MQL', 'Converted', 'Disqualified']
+      - name: lead_source
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Website', 'Webinar', 'Trade Show', 'Content',
+                         'Referral', 'Cold Outreach', 'Social']
+      - name: is_mql
+        tests:
+          - not_null
+      - name: created_date
+        tests:
+          - not_null
+
+  - name: stg_contacts
+    description: Contacts created when a lead converts.
+    columns:
+      - name: contact_id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: lead_id
+        description: Foreign key to stg_leads.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_leads')
+                field: lead_id
+
+  - name: stg_campaign_members
+    description: Campaign membership events; these are the attribution touches.
+    columns:
+      - name: campaign_member_id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: campaign_id
+        description: Foreign key to stg_campaigns.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_campaigns')
+                field: campaign_id
+      - name: lead_id
+        description: Foreign key to stg_leads.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_leads')
+                field: lead_id
+      - name: member_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Sent', 'Delivered', 'Opened', 'Clicked',
+                         'Responded', 'Registered', 'Attended']
+
+  - name: stg_opportunities
+    description: Sales opportunities tied to a contact.
+    columns:
+      - name: opportunity_id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: contact_id
+        description: Foreign key to stg_contacts.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_contacts')
+                field: contact_id
+      - name: stage
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Prospecting', 'Qualification', 'Proposal',
+                         'Negotiation', 'Closed Won', 'Closed Lost']
+      - name: amount_usd
+        tests:
+          - not_null
+      - name: is_won
+        tests:
+          - not_null

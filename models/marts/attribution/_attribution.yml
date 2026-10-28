@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: fct_attribution_first_touch
+    description: First-touch attribution credit per opportunity touch.
+    columns: &attribution_columns
+      - name: opportunity_id
+        tests:
+          - not_null
+      - name: campaign_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_campaigns')
+                field: campaign_id
+      - name: credit
+        tests:
+          - not_null
+
+  - name: fct_attribution_last_touch
+    description: Last-touch attribution credit per opportunity touch.
+    columns: *attribution_columns
+
+  - name: fct_attribution_linear
+    description: Linear attribution credit per opportunity touch.
+    columns: *attribution_columns
+
+  - name: fct_attribution_time_decay
+    description: Time-decay (7-day half-life) attribution credit per opportunity touch.
+    columns: *attribution_columns
+
+  - name: fct_attribution_w_shaped
+    description: W-shaped attribution credit per opportunity touch.
+    columns: *attribution_columns

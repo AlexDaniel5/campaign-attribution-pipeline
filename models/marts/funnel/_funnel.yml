@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: fct_campaign_funnel
+    description: >
+      Demand-generation funnel per campaign: lead -> MQL -> opportunity
+      -> closed-won counts and stage conversion rates.
+    columns:
+      - name: campaign_id
+        description: Primary key (one row per campaign).
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_campaigns')
+                field: campaign_id
+      - name: leads_count
+        tests:
+          - not_null
+      - name: mql_count
+        tests:
+          - not_null
+      - name: opportunity_count
+        tests:
+          - not_null
+      - name: won_count
+        tests:
+          - not_null

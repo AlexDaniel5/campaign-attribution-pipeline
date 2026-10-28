@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: int_opportunity_touches
+    description: >
+      Ordered campaign touches per opportunity, the shared input to the
+      five attribution marts.
+    columns:
+      - name: opportunity_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_opportunities')
+                field: opportunity_id
+      - name: campaign_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_campaigns')
+                field: campaign_id
+      - name: touch_rank
+        tests:
+          - not_null
+      - name: total_touches
+        tests:
+          - not_null
+      - name: touch_date
+        tests:
+          - not_null

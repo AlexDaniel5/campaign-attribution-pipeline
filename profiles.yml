@@ -1,0 +1,11 @@
+# dbt profile for the project. DBT_PROFILES_DIR should point at the repo
+# root (both the Makefile and CI set this). The DuckDB file is shared with
+# the Python loader via the DUCKDB_PATH env var.
+campaign_attribution:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', 'warehouse.duckdb') }}"
+      schema: main
+      threads: 4
